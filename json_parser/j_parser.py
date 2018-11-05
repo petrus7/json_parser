@@ -21,7 +21,7 @@ def filter_users(file_path: str, company: str, education: str):
             else:
                 not_valid_data.append(line)
 
-    print_filtered_users(filtered_users, not_valid_data)
+    return filtered_users, not_valid_data
 
 
 def user_fit_company(company: str, user: dict):
@@ -55,12 +55,3 @@ def create_user_from_json_str(json_str: str):
     except json.JSONDecodeError:
         return None
 
-
-def print_filtered_users(users: list, not_valid: list):
-    print('Following users fit given requirements:')
-    for user in users:
-        print(user)
-
-    print('Following users are not in valid format:')
-    for user in not_valid:
-        print(user)
