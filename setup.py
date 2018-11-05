@@ -9,5 +9,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'autopep8',
-    ]
+    ],
+    entry_points={
+        'console_scripts': ['json_parser=json_parser.entrypoint:main'],
+    },
 )

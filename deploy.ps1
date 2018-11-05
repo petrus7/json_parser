@@ -1,5 +1,5 @@
 param (
-    [string]$setup_mode = "develop"
+    [string]$setup_mode = ""
  )
 
 echo "########INPUT PARAMS#########"
@@ -20,6 +20,6 @@ If ($setup_mode -eq "develop") {
 }
 Else {
     echo "########RUN PROD MODE#########"
-    #python setup.py build
-    #python setup.py install
+    python setup.py build
+    python setup.py install
 }
