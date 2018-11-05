@@ -9,8 +9,12 @@ def main():
     parser.add_argument('--company', help='Filter users from company', required=False, type=str)
     parser.add_argument('--education', help='Filter users from university', required=False, type=str)
     args = parser.parse_args()
-    print(args.file_path)
-    print(args.company)
-    print(args.education)
-    filter_users()
-
+    f_path = args.file_path
+    company_const = args.company
+    education_const = args.education
+    try:
+        filter_users(f_path, company_const, education_const)
+    except FileNotFoundError as e:
+        print(f'CANNOT FIND FILE: {f_path} CHECK PATH PARAMETER')
+    except IOError as e:
+        print(f'CANNOT OPEN FILE: {f_path} TRY AGAIN.')
