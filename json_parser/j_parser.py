@@ -7,7 +7,7 @@ EDUCATION_KEY = 'education'
 UNIVERSITY_NAME_KEY = 'education_org'
 
 
-def filter_users(file_path:str, company:str, education:str):
+def filter_users(file_path: str, company: str, education: str):
     filtered_users = []
     not_valid_data = []
     with open(file_path, 'r') as json_data:
@@ -39,7 +39,7 @@ def user_fit_company(company: str, user: dict):
     return False
 
 
-def user_fit_education(education:str, user:dict):
+def user_fit_education(education: str, user: dict):
     if not education:
         return True
 
@@ -50,15 +50,14 @@ def user_fit_education(education:str, user:dict):
     return False
 
 
-
-def create_user_from_json_str(json_str:str):
+def create_user_from_json_str(json_str: str):
     try:
         return json.loads(json_str)
     except json.JSONDecodeError:
         return None
 
 
-def print_filtered_users(users: list, not_valid:list):
+def print_filtered_users(users: list, not_valid: list):
     print('Following users fit given requirements:')
     for user in users:
         print(user)
