@@ -19,19 +19,32 @@ class TestJSONParser(unittest.TestCase):
         company = 'Waters'
         user = create_user_from_json_str(self.test_user)
         self.assertTrue(user_fit_company(company, user))
+
+    def test_user_not_fit_company(self):
+        company = 'imaginary company'
+        user = create_user_from_json_str(self.test_user)
+        self.assertFalse(user_fit_company(company, user))
+
+    def test_user_no_company_param(self):
+        user = create_user_from_json_str(self.test_user)
         self.assertTrue(user_fit_company(None, user))
-        self.assertFalse(user_fit_company('imagine_company', user))
 
     def test_user_fit_education(self):
         education = 'Vienna University'
         user = create_user_from_json_str(self.test_user)
         self.assertTrue(user_fit_education(education, user))
+
+    def test_user_not_fit_education(self):
+        education = 'imaginary university'
+        user = create_user_from_json_str(self.test_user)
+        self.assertFalse(user_fit_education(education, user))
+
+    def test_user_no_education_param(self):
+        user = create_user_from_json_str(self.test_user)
         self.assertTrue(user_fit_education(None, user))
-        self.assertFalse(user_fit_education('imagine_university', user))
 
     def test_filter_users(self):
         self.assertRaises(FileNotFoundError, filter_users, 'test_file', 'imaginary company', 'imaginary university')
-
 
 
 if __name__ == '__main__':
