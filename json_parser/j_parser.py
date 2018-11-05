@@ -1,5 +1,4 @@
 import json
-import os
 
 COMPANY_KEY = 'company'
 COMPANY_NAME_KEY = 'company_name'
