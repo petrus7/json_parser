@@ -18,3 +18,5 @@ def main():
         print(f'CANNOT FIND FILE: {f_path} CHECK PATH PARAMETER')
     except IOError as e:
         print(f'CANNOT OPEN FILE: {f_path} TRY AGAIN.')
+    except:
+        print('Something goes wrong conntact technical support')
