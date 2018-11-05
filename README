@@ -1,3 +1,4 @@
 To run this app you need virtualenv python package
-Run deploy.sh without parameters to setup and install cli command in virtual env
+run: python virtualenv venv
+Run deploy.sh without parameters to setup and install cli command in virtual environment
 run json_parser in virtualenv to use app
