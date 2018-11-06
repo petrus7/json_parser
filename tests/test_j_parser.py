@@ -185,7 +185,7 @@ class TestUserDataFilter(unittest.TestCase):
 
     def test_filter_users_by_education(self):
 
-            params = params = {
+            params = {
                 'source': 'test_users.json',
                 'education': 'imaginary university 1',
                 'company': None,
@@ -196,7 +196,7 @@ class TestUserDataFilter(unittest.TestCase):
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 1)
 
-            params = params = {
+            params = {
                 'source': 'test_users.json',
                 'education': None,
                 'company': 'imaginary company 1',
@@ -207,7 +207,7 @@ class TestUserDataFilter(unittest.TestCase):
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 1)
 
-            params = params = {
+            params = {
                 'source': 'test_users.json',
                 'education': None,
                 'company': None,
@@ -217,6 +217,17 @@ class TestUserDataFilter(unittest.TestCase):
             user_filter = UsersDataFilter(params)
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 3)
+
+            params = {
+                'source': 'https://jsonplaceholder.typicode.com/posts',
+                'education': None,
+                'company': None,
+                'http': True,
+                'file': False
+            }
+            user_filter = UsersDataFilter(params)
+            users, not_valid = user_filter.filter()
+            self.assertEqual(len(users), 0)
 
 
 if __name__ == '__main__':

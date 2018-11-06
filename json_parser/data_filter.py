@@ -1,3 +1,4 @@
+from json_parser.data_provider import DataProvider
 from json_parser.param_validator import ParamValidator
 
 
@@ -11,7 +12,7 @@ class UsersDataFilter(object):
     def __init__(self, params: dict):
         self.params = params
         self.param_validator = ParamValidator(params)
-        # self.data_source
+        self.data_source = DataProvider().create_source(params)
 
     def user_fit_education(self, education:str, user:dict):
         if not education:
@@ -36,6 +37,12 @@ class UsersDataFilter(object):
             return True
         return False
 
-
     def filter(self):
-        return [],[]
+        filtered_users = []
+        if self.param_validator.are_params_valid():
+            users, malformed = self.data_source.get_data()
+            for user in users:
+                if self.user_fit_company(self.params.get('company'), user) and self.user_fit_education(self.params.get('education'), user):
+                    filtered_users.append(user)
+            return filtered_users, malformed
+        return [], []
