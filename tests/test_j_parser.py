@@ -23,7 +23,7 @@ class TestJSONChecker(unittest.TestCase):
         user = json_checker.create_user_dict(self.valid_json)
         self.assertTrue(json_checker.user_fit_company(company, user))
         company = 'imaginary company'
-        self.assertTrue(json_checker.user_fit_company(company, user))
+        self.assertFalse(json_checker.user_fit_company(company, user))
         company = None
         self.assertTrue(json_checker.user_fit_company(company, user))
 
@@ -33,7 +33,7 @@ class TestJSONChecker(unittest.TestCase):
         user = json_checker.create_user_dict(self.valid_json)
         self.assertTrue(json_checker.user_fit_education(education, user))
         education = 'imaginary university'
-        self.assertTrue(json_checker.user_fit_education(education, user))
+        self.assertFalse(json_checker.user_fit_education(education, user))
         education = None
         self.assertTrue(json_checker.user_fit_education(education, user))
 
