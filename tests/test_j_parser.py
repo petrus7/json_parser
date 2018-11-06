@@ -3,6 +3,7 @@ import unittest
 from json import JSONDecodeError
 import io
 
+from json_parser.data_filter import UsersDataFilter
 from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
 from json_parser.json_checker import JsonChecker
 from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath, TooManyParams
@@ -128,6 +129,57 @@ class TestFileDataSource(unittest.TestCase):
         finally:
             os.remove('test.txt')
 
+
+class TestUserDataFilter(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.test_user = '''{"education":[{"education_org":"Universit\u00e0 Commerciale 'Luigi Bocconi'","degrees":["CLEACC - Degree in Economics and Management for Arts, Culture and Communication"],"end":"2006","start":"2000"},{"education_org":"WU (Vienna University of Economics and Business)","degrees":["Summer University"],"end":"2002","start":"2002"},{"education_org":"Liceo Ginnasio Statale S.M.Legnani","degrees":["Maturit\u00e0 Classica"],"end":"2000","start":"1995"}], "company":{"company_name":"Waters"}}'''
+        cls.test_file_path = 'test_users.json'
+        try:
+            with open('test_users.json', 'w') as t_file:
+                t_file.writelines([
+                    '''{"company":{"company_name":"imaginary company 1"},"education":[{"education_org":"imaginary university 1"}]}\n''',
+                    '''{"company":{"company_name":"imaginary company 2"},"education":[{"education_org":"imaginary university 2"}]}\n''',
+                    '''{"company":{"company_name":"imaginary company 3"},"education":[{"education_org":"imaginary university 3"}]}\n'''
+                ])
+        except IOError as e:
+            print(f'TEST suite failed: {e}')
+
+    def test_filter_users_by_education(self):
+
+            params = params = {
+                'source': 'test_users.json',
+                'education': 'imaginary university 1',
+                'company': None,
+                'http': False,
+                'file': True
+            }
+            user_filter = UsersDataFilter(params).filter()
+            users, not_valid = user_filter.filter()
+            self.assertEqual(len(users), 1)
+
+            params = params = {
+                'source': 'test_users.json',
+                'education': None,
+                'company': 'imaginary company 1',
+                'http': False,
+                'file': True
+            }
+            user_filter = UsersDataFilter(params).filter()
+            users, not_valid = user_filter.filter()
+            self.assertEqual(len(users), 1)
+
+            params = params = {
+                'source': 'test_users.json',
+                'education': None,
+                'company': None,
+                'http': False,
+                'file': True
+            }
+            user_filter = UsersDataFilter(params).filter()
+            users, not_valid = user_filter.filter()
+            self.assertEqual(len(users), 3)
 
 
 if __name__ == '__main__':
