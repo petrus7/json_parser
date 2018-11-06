@@ -13,7 +13,7 @@ class DataSource(abc.ABC):
 class FileDataSource(DataSource):
 
     def get_data_stream(self):
-        pass
+        return open(self._data_source,'r')
 
 
 class ServiceDataSource(DataSource):

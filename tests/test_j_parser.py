@@ -122,9 +122,11 @@ class TestFileDataSource(unittest.TestCase):
 
             data = FileDataSource(source).get_data_stream()
             self.assertTrue(isinstance(data, io.TextIOWrapper))
-            os.remove('test.txt')
+            data.close()
         except IOError:
             print('Cannot create fake file')
+        finally:
+            os.remove('test.txt')
 
 
 
