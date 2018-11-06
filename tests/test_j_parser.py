@@ -1,7 +1,9 @@
+import os
 import unittest
 from json import JSONDecodeError
 
-from tests.json_checker import JsonChecker
+from json_parser.json_checker import JsonChecker
+from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath, TooManyParams
 
 
 class TestJSONChecker(unittest.TestCase):
@@ -36,6 +38,61 @@ class TestJSONChecker(unittest.TestCase):
         self.assertFalse(json_checker.user_fit_education(education, user))
         education = None
         self.assertTrue(json_checker.user_fit_education(education, user))
+
+
+
+
+class TestParamValidator(unittest.TestCase):
+
+    def test_check_params(self):
+
+        try:
+            with open('test.txt','w') as file:
+                validator = ParamValidator({
+                    'source': 'test.txt',
+                    'education':'imaginary',
+                    'company':'imaginary',
+                    'http': False,
+                    'file': True
+                })
+                self.assertTrue(validator.are_params_valid())
+            os.remove('test.txt')
+        except:
+            print('Cannot create fake file')
+        validator = ParamValidator({
+            'source':'no_a_apath',
+            'education':'imaginary',
+            'company':'imaginary',
+            'http': False,
+            'file': True
+        })
+        self.assertRaises(NotAFilePath, validator.are_params_valid)
+        validator = ParamValidator({
+            'source': 'not_a_url',
+            'education': 'imaginary',
+            'company': 'imaginary',
+            'http': True,
+            'file': False
+        })
+        self.assertRaises(NotAUrl, validator.are_params_valid)
+
+        validator = ParamValidator({
+            'source': 'not_a_url',
+            'education': 'imaginary',
+            'company': 'imaginary',
+            'http': True,
+            'file': True
+        })
+        self.assertRaises(TooManyParams, validator.are_params_valid)
+
+
+# class TestDataProvider(unittest.TestCase):
+#
+#     def test_apply_correct_data_provider(self):
+#
+#         data_provider = UsersDataProvider()
+#         data_source = UsersDataProvider().create_source(params)
+#         self.assertTrue(isinstance(FileDataProvider,))
 
 
 
