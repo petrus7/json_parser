@@ -86,13 +86,29 @@ class TestParamValidator(unittest.TestCase):
         self.assertRaises(TooManyParams, validator.are_params_valid)
 
 
-# class TestDataProvider(unittest.TestCase):
-#
-#     def test_apply_correct_data_provider(self):
-#
-#         data_provider = UsersDataProvider()
-#         data_source = UsersDataProvider().create_source(params)
-#         self.assertTrue(isinstance(FileDataProvider,))
+class TestDataProvider(unittest.TestCase):
+
+    def test_apply_correct_data_provider(self):
+        params = {
+            'source': 'not_a_url',
+            'education': 'imaginary',
+            'company': 'imaginary',
+            'http': True,
+            'file': False
+        }
+        data_provider = UsersDataProvider()
+        data_source = data_provider.create_source(params)
+        self.assertTrue(isinstance(FileDataProvider, data_source))
+
+        params = {
+            'source': 'not_a_url',
+            'education': 'imaginary',
+            'company': 'imaginary',
+            'http': False,
+            'file': True
+        }
+        data_source = data_provider.create_source(params)
+        self.assertTrue(isinstance(ServiceDataProvider, data_source))
 
 
 
