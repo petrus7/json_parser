@@ -121,7 +121,7 @@ class TestFileDataSource(unittest.TestCase):
             with open(source,'w') as file:
                 print('file created')
 
-            data = FileDataSource(source).get_data_stream()
+            data = FileDataSource(source).get_data()
             self.assertTrue(isinstance(data, io.TextIOWrapper))
             data.close()
         except IOError:
@@ -163,7 +163,7 @@ class TestUserDataFilter(unittest.TestCase):
                 'http': False,
                 'file': True
             }
-            user_filter = UsersDataFilter(params).filter()
+            user_filter = UsersDataFilter(params)
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 1)
 
@@ -174,7 +174,7 @@ class TestUserDataFilter(unittest.TestCase):
                 'http': False,
                 'file': True
             }
-            user_filter = UsersDataFilter(params).filter()
+            user_filter = UsersDataFilter(params)
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 1)
 
@@ -185,7 +185,7 @@ class TestUserDataFilter(unittest.TestCase):
                 'http': False,
                 'file': True
             }
-            user_filter = UsersDataFilter(params).filter()
+            user_filter = UsersDataFilter(params)
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 3)
 

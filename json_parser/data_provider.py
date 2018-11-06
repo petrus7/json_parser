@@ -6,19 +6,20 @@ class DataSource(abc.ABC):
         self._data_source = data_source
 
     @abc.abstractmethod
-    def get_data_stream(self):
+    def get_data(self):
         pass
 
 
 class FileDataSource(DataSource):
 
-    def get_data_stream(self):
-        return open(self._data_source,'r')
+    def get_data(self):
+        with open(self._data_source, 'r') as file:
+            return file.readlines()
 
 
 class ServiceDataSource(DataSource):
 
-    def get_data_stream(self):
+    def get_data(self):
         pass
 
 
