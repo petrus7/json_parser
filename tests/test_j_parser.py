@@ -2,6 +2,7 @@ import os
 import unittest
 from json import JSONDecodeError
 
+from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
 from json_parser.json_checker import JsonChecker
 from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath, TooManyParams
 
@@ -96,9 +97,9 @@ class TestDataProvider(unittest.TestCase):
             'http': True,
             'file': False
         }
-        data_provider = UsersDataProvider()
+        data_provider = DataProvider()
         data_source = data_provider.create_source(params)
-        self.assertTrue(isinstance(FileDataProvider, data_source))
+        self.assertTrue(isinstance(data_source, ServiceDataSource))
 
         params = {
             'source': 'not_a_url',
@@ -108,7 +109,7 @@ class TestDataProvider(unittest.TestCase):
             'file': True
         }
         data_source = data_provider.create_source(params)
-        self.assertTrue(isinstance(ServiceDataProvider, data_source))
+        self.assertTrue(isinstance(data_source, FileDataSource))
 
 
 
