@@ -146,6 +146,14 @@ class TestUserDataFilter(unittest.TestCase):
         except IOError as e:
             print(f'TEST suite failed: {e}')
 
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            if os.path.exists(cls.test_file_path):
+                os.remove(cls.test_file_path)
+        except Exception as e:
+            print(f'TEST suite failed: {e}')
+
     def test_filter_users_by_education(self):
 
             params = params = {
