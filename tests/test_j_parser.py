@@ -2,6 +2,7 @@ import os
 import unittest
 from json import JSONDecodeError
 import io
+import requests
 
 from json_parser.data_filter import UsersDataFilter
 from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
@@ -71,7 +72,7 @@ class TestDataProvider(unittest.TestCase):
 
     def test_apply_correct_data_provider(self):
         params = {
-            'source': 'not_a_url',
+            'source': 'https://jsonplaceholder.typicode.com/posts',
             'education': 'imaginary',
             'company': 'imaginary',
             'http': True,
@@ -106,6 +107,19 @@ class TestFileDataSource(unittest.TestCase):
             print('Cannot create fake file')
         finally:
             os.remove('test.txt')
+
+
+class TestServiceDataSource(unittest.TestCase):
+
+    def test_data_not_available(self):
+        source = 'https://jsonpladddceholder.typicode.com/posts'
+        provider = ServiceDataSource(source)
+        self.assertRaises(requests.exceptions.ConnectionError, provider.get_data)
+
+    def test_data_available(self):
+        source = 'https://jsonplaceholder.typicode.com/posts'
+        users, malformed = ServiceDataSource(source).get_data()
+        self.assertTrue(isinstance(users, list))
 
 
 class TestUserDataFilter(unittest.TestCase):

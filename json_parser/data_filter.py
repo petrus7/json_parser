@@ -13,7 +13,6 @@ class UsersDataFilter(object):
         self.param_validator = ParamValidator(params)
         # self.data_source
 
-
     def user_fit_education(self, education:str, user:dict):
         if not education:
             return True

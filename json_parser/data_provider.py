@@ -1,7 +1,8 @@
 import abc
+import requests
 from json import JSONDecodeError
 
-from json_parser.json_checker import JsonChecker
+from json_parser.json_checker import JsonChecker, WrongFormatException
 
 
 class DataSource(abc.ABC):
@@ -26,13 +27,25 @@ class FileDataSource(DataSource):
                     ret.append(json_checker.create_user_dict(line))
                 except JSONDecodeError as e:
                     malformed.append(line)
+                except WrongFormatException as e:
+                    malformed.append(line)
         return ret, malformed
 
 
 class ServiceDataSource(DataSource):
 
     def get_data(self):
-        pass
+        ret = []
+        malformed = []
+        json_checker = JsonChecker()
+        json_data = requests.get(self._data_source).json()
+        for user in json_data:
+            try:
+                ret.append(json_checker.check_dict_format(user))
+            except WrongFormatException:
+                malformed.append(user)
+        return ret, malformed
+
 
 
 class DataProvider(object):

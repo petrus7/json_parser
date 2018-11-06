@@ -1,7 +1,7 @@
 import json
 
 
-class WrongFormatException(json.JSONDecodeError):
+class WrongFormatException(Exception):
     pass
 
 
@@ -25,4 +25,4 @@ class JsonChecker(object):
             raise WrongFormatException(f'Bad formated data: lack of {self.EDUCATION_KEY}')
         if self.EDUCATION_KEY not in user_data:
             raise WrongFormatException(f'Bad formated data: lack of {self.COMPANY_KEY}')
-
+        return user_data
