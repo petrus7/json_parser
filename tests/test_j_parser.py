@@ -1,6 +1,7 @@
 import os
 import unittest
 from json import JSONDecodeError
+import io
 
 from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
 from json_parser.json_checker import JsonChecker
@@ -39,8 +40,6 @@ class TestJSONChecker(unittest.TestCase):
         self.assertFalse(json_checker.user_fit_education(education, user))
         education = None
         self.assertTrue(json_checker.user_fit_education(education, user))
-
-
 
 
 class TestParamValidator(unittest.TestCase):
@@ -110,6 +109,22 @@ class TestDataProvider(unittest.TestCase):
         }
         data_source = data_provider.create_source(params)
         self.assertTrue(isinstance(data_source, FileDataSource))
+
+
+class TestFileDataSource(unittest.TestCase):
+
+    def test_file_available(self):
+
+        try:
+            source = 'test.txt'
+            with open(source,'w') as file:
+                print('file created')
+
+            data = FileDataSource(source).get_data_stream()
+            self.assertTrue(isinstance(data, io.TextIOWrapper))
+            os.remove('test.txt')
+        except IOError:
+            print('Cannot create fake file')
 
 
 
