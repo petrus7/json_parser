@@ -20,27 +20,7 @@ class TestJSONChecker(unittest.TestCase):
         json_checker = JsonChecker()
         self.assertIsNotNone(json_checker.create_user_dict(self.valid_json))
         self.assertRaises(JSONDecodeError, json_checker.create_user_dict, self.not_valid_json)
-        pass
 
-    def test_mach_company_constraint(self):
-        company = 'Waters'
-        json_checker = JsonChecker()
-        user = json_checker.create_user_dict(self.valid_json)
-        self.assertTrue(json_checker.user_fit_company(company, user))
-        company = 'imaginary company'
-        self.assertFalse(json_checker.user_fit_company(company, user))
-        company = None
-        self.assertTrue(json_checker.user_fit_company(company, user))
-
-    def test_mach_education_constraint(self):
-        education = 'Vienna University'
-        json_checker = JsonChecker()
-        user = json_checker.create_user_dict(self.valid_json)
-        self.assertTrue(json_checker.user_fit_education(education, user))
-        education = 'imaginary university'
-        self.assertFalse(json_checker.user_fit_education(education, user))
-        education = None
-        self.assertTrue(json_checker.user_fit_education(education, user))
 
 
 class TestParamValidator(unittest.TestCase):
@@ -120,10 +100,8 @@ class TestFileDataSource(unittest.TestCase):
             source = 'test.txt'
             with open(source,'w') as file:
                 print('file created')
-
-            data = FileDataSource(source).get_data()
-            self.assertTrue(isinstance(data, io.TextIOWrapper))
-            data.close()
+            users, malformed = FileDataSource(source).get_data()
+            self.assertTrue(isinstance(users, list))
         except IOError:
             print('Cannot create fake file')
         finally:
@@ -153,6 +131,43 @@ class TestUserDataFilter(unittest.TestCase):
                 os.remove(cls.test_file_path)
         except Exception as e:
             print(f'TEST suite failed: {e}')
+
+
+    def test_mach_company_constraint(self):
+        company = 'Waters'
+        params = params = {
+            'source': 'test_users.json',
+            'education': 'imaginary university 1',
+            'company': None,
+            'http': False,
+            'file': True
+        }
+        user_filter = UsersDataFilter(params)
+        json_checker = JsonChecker()
+        user = json_checker.create_user_dict(self.test_user)
+        self.assertTrue(user_filter.user_fit_company(company, user))
+        company = 'imaginary company'
+        self.assertFalse(user_filter.user_fit_company(company, user))
+        company = None
+        self.assertTrue(user_filter.user_fit_company(company, user))
+
+    def test_mach_education_constraint(self):
+        education = 'Vienna University'
+        params = {
+            'source': 'test_users.json',
+            'education': 'imaginary university 1',
+            'company': None,
+            'http': False,
+            'file': True
+        }
+        user_filter = UsersDataFilter(params)
+        json_checker = JsonChecker()
+        user = json_checker.create_user_dict(self.test_user)
+        self.assertTrue(user_filter.user_fit_education(education, user))
+        education = 'imaginary university'
+        self.assertFalse(user_filter.user_fit_education(education, user))
+        education = None
+        self.assertTrue(user_filter.user_fit_education(education, user))
 
     def test_filter_users_by_education(self):
 
