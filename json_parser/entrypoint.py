@@ -1,22 +1,29 @@
 import argparse
 
-from json_parser.j_parser import filter_users
+from json_parser.data_filter import UsersDataFilter
+from json_parser.param_validator import NotAUrl, NotAFilePath
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--file_path', help='File to parse path', required=True, type=str)
+        '--source', help='File to parse path', required=True, type=str)
     parser.add_argument(
         '--company', help='Filter users from company', required=False, type=str)
     parser.add_argument(
         '--education', help='Filter users from university', required=False, type=str)
+    parser.add_argument('--web', dest='file', action='store_false', required=False)
+    parser.set_defaults(file=True)
     args = parser.parse_args()
-    f_path = args.file_path
-    company_const = args.company
-    education_const = args.education
+    params = {
+        'source': args.source,
+        'education': args.education,
+        'company': args.company,
+        'file': args.file
+    }
+
     try:
-        users, not_valid_data = filter_users(f_path, company_const, education_const)
+        users, not_valid_data = UsersDataFilter(params).filter()
         print('Following users fit given requirements:')
         for user in users:
             print(user)
@@ -24,9 +31,13 @@ def main():
             print('Following users are not in valid format:')
             for user in not_valid_data:
                 print(user)
-    except FileNotFoundError as e:
-        print(f'CANNOT FIND FILE: {f_path} CHECK PATH PARAMETER')
-    except IOError as e:
-        print(f'CANNOT OPEN FILE: {f_path} TRY AGAIN.')
+    except NotAFilePath as e:
+        print(f'CANNOT OPEN FILE: {e} TRY AGAIN.')
+    except NotAUrl as e:
+        print(f'Cannot fetch data: {e}')
     except:
-        print('Something goes wrong conntact technical support')
+        print("somethiong goes wrong contact technical support")
+
+
+if __name__ =='__main__':
+    main()

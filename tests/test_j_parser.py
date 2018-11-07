@@ -1,13 +1,12 @@
 import os
 import unittest
 from json import JSONDecodeError
-import io
 import requests
 
 from json_parser.data_filter import UsersDataFilter
 from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
 from json_parser.json_checker import JsonChecker
-from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath, TooManyParams
+from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath
 
 
 class TestJSONChecker(unittest.TestCase):
@@ -23,7 +22,6 @@ class TestJSONChecker(unittest.TestCase):
         self.assertRaises(JSONDecodeError, json_checker.create_user_dict, self.not_valid_json)
 
 
-
 class TestParamValidator(unittest.TestCase):
 
     def test_check_params(self):
@@ -34,7 +32,6 @@ class TestParamValidator(unittest.TestCase):
                     'source': 'test.txt',
                     'education':'imaginary',
                     'company':'imaginary',
-                    'http': False,
                     'file': True
                 })
                 self.assertTrue(validator.are_params_valid())
@@ -45,7 +42,6 @@ class TestParamValidator(unittest.TestCase):
             'source':'no_a_apath',
             'education':'imaginary',
             'company':'imaginary',
-            'http': False,
             'file': True
         })
         self.assertRaises(NotAFilePath, validator.are_params_valid)
@@ -53,19 +49,10 @@ class TestParamValidator(unittest.TestCase):
             'source': 'not_a_url',
             'education': 'imaginary',
             'company': 'imaginary',
-            'http': True,
             'file': False
         })
         self.assertRaises(NotAUrl, validator.are_params_valid)
 
-        validator = ParamValidator({
-            'source': 'not_a_url',
-            'education': 'imaginary',
-            'company': 'imaginary',
-            'http': True,
-            'file': True
-        })
-        self.assertRaises(TooManyParams, validator.are_params_valid)
 
 
 class TestDataProvider(unittest.TestCase):
@@ -75,7 +62,6 @@ class TestDataProvider(unittest.TestCase):
             'source': 'https://jsonplaceholder.typicode.com/posts',
             'education': 'imaginary',
             'company': 'imaginary',
-            'http': True,
             'file': False
         }
         data_provider = DataProvider()
@@ -86,7 +72,6 @@ class TestDataProvider(unittest.TestCase):
             'source': 'not_a_url',
             'education': 'imaginary',
             'company': 'imaginary',
-            'http': False,
             'file': True
         }
         data_source = data_provider.create_source(params)
@@ -153,7 +138,6 @@ class TestUserDataFilter(unittest.TestCase):
             'source': 'test_users.json',
             'education': 'imaginary university 1',
             'company': None,
-            'http': False,
             'file': True
         }
         user_filter = UsersDataFilter(params)
@@ -171,7 +155,6 @@ class TestUserDataFilter(unittest.TestCase):
             'source': 'test_users.json',
             'education': 'imaginary university 1',
             'company': None,
-            'http': False,
             'file': True
         }
         user_filter = UsersDataFilter(params)
@@ -189,7 +172,6 @@ class TestUserDataFilter(unittest.TestCase):
                 'source': 'test_users.json',
                 'education': 'imaginary university 1',
                 'company': None,
-                'http': False,
                 'file': True
             }
             user_filter = UsersDataFilter(params)
@@ -200,7 +182,6 @@ class TestUserDataFilter(unittest.TestCase):
                 'source': 'test_users.json',
                 'education': None,
                 'company': 'imaginary company 1',
-                'http': False,
                 'file': True
             }
             user_filter = UsersDataFilter(params)
@@ -211,7 +192,6 @@ class TestUserDataFilter(unittest.TestCase):
                 'source': 'test_users.json',
                 'education': None,
                 'company': None,
-                'http': False,
                 'file': True
             }
             user_filter = UsersDataFilter(params)
@@ -222,7 +202,6 @@ class TestUserDataFilter(unittest.TestCase):
                 'source': 'https://jsonplaceholder.typicode.com/posts',
                 'education': None,
                 'company': None,
-                'http': True,
                 'file': False
             }
             user_filter = UsersDataFilter(params)
