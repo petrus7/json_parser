@@ -7,6 +7,7 @@ from json_parser.data_filter import UsersDataFilter
 from json_parser.data_provider import DataProvider, FileDataSource, ServiceDataSource
 from json_parser.json_checker import JsonChecker
 from json_parser.param_validator import ParamValidator, NotAUrl, NotAFilePath
+from unittest import mock
 
 
 class TestJSONChecker(unittest.TestCase):
@@ -94,6 +95,7 @@ class TestFileDataSource(unittest.TestCase):
             os.remove('test.txt')
 
 
+
 class TestServiceDataSource(unittest.TestCase):
 
     def test_data_not_available(self):
@@ -166,7 +168,8 @@ class TestUserDataFilter(unittest.TestCase):
         education = None
         self.assertTrue(user_filter.user_fit_education(education, user))
 
-    def test_filter_users_by_education(self):
+    @mock.patch('json_parser.data_provider.ServiceDataSource')
+    def test_filter_users_by_education(self, mocked_data_getter):
 
             params = {
                 'source': 'test_users.json',
@@ -198,6 +201,9 @@ class TestUserDataFilter(unittest.TestCase):
             users, not_valid = user_filter.filter()
             self.assertEqual(len(users), 3)
 
+            service_data = mocked_data_getter()
+            service_data.get_data.return_value = ([], [])
+            service_data.get_data()
             params = {
                 'source': 'https://jsonplaceholder.typicode.com/posts',
                 'education': None,
